@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html ng-app="testApp" ng-controller="MainCtrl">
+<head>
+    <style>
+        body {
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            color: white;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        #header {
+            background-color: black;
+            padding: 10px;
+            text-align: center;
+            bottom: 10px;
+        }
+
+        #footer {
+            background-color: black;
+            padding: 10px;
+            text-align: center;
+            width: 100%;
+            position: absolute;
+            bottom: 10;
+            height: 25px;
+        }
+        .h4{
+        	bottom: 10px;
+        }
+
+        #map {
+            height: 600px;
+            width: 1300px;
+            margin: 30px auto; /* Center the map on the page */
+        }
+
+        .table {
+            width: 1000px;
+            background-color: black;
+            margin: 20px auto; /* Center the table on the page */
+        }
+    </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+</head>
+<body>
+    <div id="header">
+        <marquee style="color: red">
+            <h1>Dog Tracer</h1>
+        </marquee>
+    </div>
+
+    <div style="height: 200px">
+        <div class="table-responsive-lg" id="angular-with-newlines">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="text-align: center; width: 25px;"><span id="time"
+                                style="font-size: 20px; color: red"> Device_Id</span></th>
+                                
+                                 <th style="text-align: center;width: 25px;"><span id="time"
+                                style="font-size: 20px; color: red">Latitude </span></th>
+                        <th style="text-align: center;width: 25px;"><span id="time"
+                                style="font-size: 20px; color: red"> Longitude</span></th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <span style="font-size: 17px;color: white"><center>{{id}}</center></span>
+                        </td>
+                        <td>
+                            <span style="font-size: 17px;color: white"><center>{{lat1}}</center></span>
+                        </td>
+                        <td>
+                            <span style="font-size: 17px;color: white"><center>{{lng1}}</center></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="map"></div>
+
+    <div id="footer">
+        <!-- Your footer content goes here -->
+        <h4 id="h4">@.2024</h4>
+    </div>
+
+    <script>
+        var app = angular.module('testApp', [])
+            .controller('MainCtrl', function ($scope, $http, $window) {
+                $http.get('data/view').success(function (infoTrack) {
+                    $scope.info = infoTrack;
+                    $scope.id = $scope.info[($scope.info.length) - 1].id;
+                    $scope.lat1 = parseFloat($scope.info[($scope.info.length) - 1].lat1).toFixed(4);
+                    $scope.lng1 = parseFloat($scope.info[($scope.info.length) - 1].lng1).toFixed(4);
+
+                    var lat1 = parseFloat($scope.lat1);
+                    var lng1 = parseFloat($scope.lng1);
+
+                    var second = {
+                        lat: lat1,
+                        lng: lng1
+                    };
+
+                    var name = "A";
+                    $window.map = new google.maps.Map(
+                        document.getElementById('map'),
+                        {
+                            center: second,
+                            zoom: 11
+                        });
+
+                    var marker = new google.maps.Marker(
+                        {
+                            position: second,
+                            label: name,
+                            map: map
+                        });
+
+                });
+            });
+    </script>
+
+<script
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRBhuaOI1aTwVpCUnsq_LxaaU7KQrwOS4">    </script>
+ </body>
+</html>
